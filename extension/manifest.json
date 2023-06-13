@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Decodify",
+  "version": "0.0.1",
+  "permissions": ["storage"],
+  "description": "Supercharges Etherscan and its derivatives by using rotki's powerful decoding feature",
+  "content_scripts": [
+    {
+      "js": ["js/jquery.min.js", "js/inject.js"],
+      "matches": ["https://etherscan.io/tx/*", "https://optimistic.etherscan.io/tx/*"],
+      "run_at": "document_start"
+    }
+  ],
+  "action": {
+    "default_title": "decodify",
+    "default_icon": "images/64.png",
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "64": "images/64.png",
+    "128": "images/128.png"
+  },
+  "background": {
+    "service_worker": "js/background.js"
+  }
+}
