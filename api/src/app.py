@@ -69,7 +69,7 @@ def http_errorhandler(e: HTTPException):
 @app.get('/')
 def index() -> Response:
     """This endpoint serves as a PING endpoint."""
-    return jsonify(message='welcome to rotki-etherscan api'), 200
+    return jsonify(message='welcome to decodify api'), 200
 
 
 @app.get('/transactions/<tx_hash>/<chain>/addresses')
