@@ -10,6 +10,7 @@ You can set up your own server to perform the decoding. Before you begin, obtain
 
 - [Optimism Etherscan API key](https://optimistic.etherscan.io/apis)
 - [Etherscan API key](https://docs.etherscan.io/getting-started/viewing-api-usage-statistics)
+- [Polygonscan API key](https://docs.polygonscan.com/getting-started/viewing-api-usage-statistics)
 
 ### Using Docker Image (Recommended)
 
