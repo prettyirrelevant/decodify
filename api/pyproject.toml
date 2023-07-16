@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "decodify-api"
+version = "0.0.1"
+description = ""
+authors = ["Isaac Adewumi <ienioladewumi@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+rotkehlchen = {git = "https://github.com/rotki/rotki.git", rev = "42d7eae113274e3b18fe4b9a61160b155eefdf2d"}
+flask-caching = "^2.0.2"
+python-dotenv = "^1.0.0"
+
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.12.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

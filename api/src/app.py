@@ -9,11 +9,8 @@ from flask import Flask, Response, jsonify
 from flask_caching import Cache
 from flask_cors import CORS
 from marshmallow import validate
-from rotkehlchen.api.v1.fields import (
-    EvmAddressField,
-    EvmChainNameField,
-    EVMTransactionHashField,
-)
+from rotkehlchen.api.v1.fields import (EvmAddressField, EvmChainNameField,
+                                       EVMTransactionHashField)
 from rotkehlchen.chain.accounts import BlockchainAccountData
 from rotkehlchen.errors.misc import InputError
 from rotkehlchen.types import ChainID, EvmAddress, EVMTxHash
@@ -23,11 +20,13 @@ from werkzeug.exceptions import HTTPException
 
 from .utils import RotkiLite
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+SUPPORTED_CHAIN_IDS = [ChainID.ETHEREUM, ChainID.OPTIMISM, ChainID.POLYGON_POS]
 
+BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / '.env', verbose=True)
 
 app = Flask(__name__)
+
 if not environ.get('REDIS_URL', None):
     app.config['CACHE_TYPE'] = 'FileSystemCache'
 
@@ -47,6 +46,7 @@ rotki = RotkiLite(
     password='deeznut',
     ethereum_api_key=environ.get('ETHEREUM_API_KEY'),
     optimism_api_key=environ.get('OPTIMISM_API_KEY'),
+    polygon_api_key=environ.get('POLYGON_API_KEY')
 )
 
 
@@ -74,7 +74,7 @@ def index() -> Response:
 
 @app.get('/transactions/<tx_hash>/<chain>/addresses')
 @cache.cached()
-@use_kwargs({'tx_hash': EVMTransactionHashField(required=True), 'chain': EvmChainNameField(required=True, limit_to=[ChainID.ETHEREUM, ChainID.OPTIMISM])}, location='view_args')  # noqa: E501
+@use_kwargs({'tx_hash': EVMTransactionHashField(required=True), 'chain': EvmChainNameField(required=True, limit_to=SUPPORTED_CHAIN_IDS)}, location='view_args')  # noqa: E501
 def fetch_transaction_addresses(tx_hash: EVMTxHash, chain: ChainID):
     addresses = rotki.fetch_transaction_addresses(
         chain=chain,
@@ -85,7 +85,7 @@ def fetch_transaction_addresses(tx_hash: EVMTxHash, chain: ChainID):
 
 @app.get('/transactions/<tx_hash>/<chain>/decode')
 @cache.cached()
-@use_kwargs({'tx_hash': EVMTransactionHashField(required=True), 'chain': EvmChainNameField(required=True, limit_to=[ChainID.ETHEREUM, ChainID.OPTIMISM])}, location='view_args')  # noqa: E501
+@use_kwargs({'tx_hash': EVMTransactionHashField(required=True), 'chain': EvmChainNameField(required=True, limit_to=SUPPORTED_CHAIN_IDS)}, location='view_args')  # noqa: E501
 @use_kwargs({'related_addresses': DelimitedList(EvmAddressField(), required=True, validate=validate.Length(max=2))}, location='query')  # noqa: E501
 def decode_transaction(
     tx_hash: EVMTxHash,
