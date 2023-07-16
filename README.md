@@ -16,7 +16,7 @@ You can set up your own server to perform the decoding. Before you begin, obtain
 1. Run the following command, replacing `<preferred_port>`, `<api-key>` (Etherscan), and `<api-key>` (Optimism Etherscan) with your values:
 
    ```
-   docker run -d -p <preferred_port>:2000 -e ETHEREUM_API_KEY=<api-key> -e OPTIMISM_API_KEY=<api-key> prettyirrelevant/decodify
+   docker run -d -p <preferred_port>:2000 -e ETHEREUM_API_KEY=<api-key> -e OPTIMISM_API_KEY=<api-key> POLYGON_API_KEY=<api-key> prettyirrelevant/decodify
    ```
 
 2. Ping `localhost:<selected_port>` to verify that the server is up and running.
@@ -25,7 +25,7 @@ You can set up your own server to perform the decoding. Before you begin, obtain
 
 1. Set up a Python virtual environment and clone the repository.
 2. Change the directory to `/api` and install the dependencies using `pip install -r requirements.txt`.
-3. Set the environment variables `ETHEREUM_API_KEY` and `OPTIMISM_API_KEY` with your API keys.
+3. Set the environment variables `ETHEREUM_API_KEY`, `OPTIMISM_API_KEY` and `POLYGON_API_KEY` with your API keys.
 4. Run the server with `PYTHONOPTIMIZE=1 flask run`.
 
 ## Acknowledgments

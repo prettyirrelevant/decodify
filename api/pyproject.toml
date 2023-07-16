@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "decodify-api"
-version = "0.0.1"
-description = ""
+version = "0.0.2"
+description = "Supercharges Etherscan and its derivatives by using rotki's powerful decoding feature"
 authors = ["Isaac Adewumi <ienioladewumi@gmail.com>"]
 readme = "README.md"
 
