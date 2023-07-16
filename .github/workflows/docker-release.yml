@@ -2,8 +2,8 @@ name: Publish Docker Image
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - "v*"
 
 jobs:
   build-and-push:
@@ -25,6 +25,10 @@ jobs:
           username: prettyirrelevant
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
+      - name: Decodify Version
+        id: decodify_version
+        run: echo "version=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+
       - name: Build and push Docker images
         uses: docker/build-push-action@v3
         with:
@@ -32,4 +36,4 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            prettyirrelevant/decodify:latest
+            prettyirrelevant/decodify:${{ steps.decodify_version.outputs.version }}
