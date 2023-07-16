@@ -1,13 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Decodify",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "permissions": ["storage"],
   "description": "Supercharges Etherscan and its derivatives by using rotki's powerful decoding feature",
   "content_scripts": [
     {
       "js": ["js/jquery.min.js", "js/inject.js"],
-      "matches": ["https://etherscan.io/tx/*", "https://optimistic.etherscan.io/tx/*"],
+      "matches": ["https://etherscan.io/tx/*", "https://optimistic.etherscan.io/tx/*", "https://polygonscan.com/tx/*"],
       "run_at": "document_start"
     }
   ],

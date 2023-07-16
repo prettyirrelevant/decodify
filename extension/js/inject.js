@@ -51,7 +51,7 @@ $(function () {
   }
 
   // gets the icon tag for each event type for Optimism.
-  function getIconForOptimismEvent(e) {
+  function getIconForOptimismAndPolygonEvent(e) {
     if (e.event_type === 'spend' && e.event_subtype === 'fee') {
       return '<i class="fas fa-gas-pump"></i>';
     } else if (e.event_type === 'spend') {
@@ -75,6 +75,8 @@ $(function () {
       url = 'https://etherscan.io/address';
     } else if (chain === 'optimism') {
       url = 'https://optimistic.etherscan.io/address';
+    } else if (chain === 'polygon_pos') {
+      url = 'https://polygonscan.com/address';
     }
     const addressRegex = /0x[0-9a-fA-F]{40}/g;
     const etherscanLink = (address) => `<a href="${url}/${address}" target="_blank">${address.slice(0, 8)}...${address.slice(-8)}</a>`;
@@ -96,7 +98,7 @@ $(function () {
     `);
 
     const container = $('div#pills-tabContent').children().last();
-    const addresses = await getTransactionAddresses(txHash, 'ethereum');
+    const addresses = await getTransactionAddresses(txHash, chain);
     if (!addresses) {
       container.html(`
         <div class="card pt-5">
@@ -109,7 +111,7 @@ $(function () {
       return;
     }
 
-    const decodedEvents = await getTransactionDecodedEvents(txHash, 'ethereum', ...addresses.data);
+    const decodedEvents = await getTransactionDecodedEvents(txHash, chain, ...addresses.data);
     if (!decodedEvents || decodedEvents?.data?.length === 0) {
       container.html(`
         <div class="card pt-5">
@@ -145,8 +147,7 @@ $(function () {
     `);
   }
 
-  async function injectDecodedEventsOptimism() {
-    const chain = 'optimism';
+  async function injectDecodedEventsOptimismAndPolygon(txHash, chain) {
     $('ul#nav_tabs').append(`
       <li id="ContentPlaceHolder1_li_decodedevents" class="nav-item">
         <a class="nav-link" id="decodedevents-tab" data-toggle="tab" href="#decodedevents" aria-controls="decodedevents" aria-selected="false" onclick="javascript:updatehash('decodedevents');">Decoded Events</a>
@@ -160,7 +161,7 @@ $(function () {
     `);
 
     const container = $('div#myTabContent').children().last();
-    const addresses = await getTransactionAddresses(txHash, 'optimism');
+    const addresses = await getTransactionAddresses(txHash, chain);
     if (!addresses) {
       container.html(`
         <div class="card-body">
@@ -173,7 +174,7 @@ $(function () {
       return;
     }
 
-    const decodedEvents = await getTransactionDecodedEvents(txHash, 'optimism', ...addresses.data);
+    const decodedEvents = await getTransactionDecodedEvents(txHash, chain, ...addresses.data);
     if (!decodedEvents || decodedEvents?.data?.length === 0) {
       container.html(`
         <div class="card-body">
@@ -188,7 +189,7 @@ $(function () {
 
     let data = '';
     decodedEvents.data.forEach((el, i) => {
-      const icon = getIconForOptimismEvent(el.entry);
+      const icon = getIconForOptimismAndPolygonEvent(el.entry);
       data += `
         <div class="bg-light rounded border mb-3 p-3">
           ${icon}
@@ -214,7 +215,9 @@ $(function () {
   if (window.location.hostname === 'etherscan.io') {
     injectDecodedEventsEthereum(txHash);
   } else if (window.location.host === 'optimistic.etherscan.io') {
-    injectDecodedEventsOptimism(txHash);
+    injectDecodedEventsOptimismAndPolygon(txHash, 'optimism');
+  } else if (window.location.host === 'polygonscan.com') {
+    injectDecodedEventsOptimismAndPolygon(txHash, 'polygon_pos');
   } else {
     return;
   }
