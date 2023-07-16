@@ -10,6 +10,7 @@ python = "^3.9"
 rotkehlchen = {git = "https://github.com/rotki/rotki.git", rev = "42d7eae113274e3b18fe4b9a61160b155eefdf2d"}
 flask-caching = "^2.0.2"
 python-dotenv = "^1.0.0"
+gunicorn = "^20.1.0"
 
 
 [tool.poetry.group.dev.dependencies]
