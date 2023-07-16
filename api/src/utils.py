@@ -47,7 +47,7 @@ class RotkiLite:
             data_dir=self.__data_dir,
             sql_vm_instructions_cb=DEFAULT_SQL_VM_INSTRUCTIONS_CB,
         )
-        self.__database = DBHandler(
+        self.database = DBHandler(
             user_data_dir=self.__user_data_dir,
             password=password,
             msg_aggregator=self.__msg_aggregator,
@@ -55,7 +55,7 @@ class RotkiLite:
             sql_vm_instructions_cb=DEFAULT_SQL_VM_INSTRUCTIONS_CB,
             resume_from_backup=False,
         )
-        with self.__database.user_write() as write_cursor:
+        with self.database.user_write() as write_cursor:
             populate_db_with_rpc_nodes(write_cursor)
             self._add_api_keys_to_database(
                 write_cursor=write_cursor,
@@ -67,29 +67,29 @@ class RotkiLite:
         # Initialise all node inquirers
         ethereum_inquirer = EthereumInquirer(
             greenlet_manager=self.__greenlet_manager,
-            database=self.__database,
+            database=self.database,
         )
         optimism_inquirer = OptimismInquirer(
             greenlet_manager=self.__greenlet_manager,
-            database=self.__database,
+            database=self.database,
         )
         polygon_inquirer = PolygonPOSInquirer(
             greenlet_manager=self.__greenlet_manager,
-            database=self.__database,
+            database=self.database,
         )
 
         # Initialise all transactions objects
         self.__ethereum_transactions = EthereumTransactions(
             ethereum_inquirer=ethereum_inquirer,
-            database=self.__database,
+            database=self.database,
         )
         self.__optimism_transactions = OptimismTransactions(
             optimism_inquirer=optimism_inquirer,
-            database=self.__database,
+            database=self.database,
         )
         self.__polygon_transactions = PolygonPOSTransactions(
             polygon_pos_inquirer=polygon_inquirer,
-            database=self.__database,
+            database=self.database,
         )
 
         # To prevent circular imports.
@@ -101,17 +101,17 @@ class RotkiLite:
             PolygonPOSTransactionDecoder
 
         self.__ethereum_tx_decoder = EthereumTransactionDecoder(
-            database=self.__database,
+            database=self.database,
             ethereum_inquirer=ethereum_inquirer,
             transactions=self.__ethereum_transactions,
         )
         self.__optimism_tx_decoder = OptimismTransactionDecoder(
-            database=self.__database,
+            database=self.database,
             optimism_inquirer=optimism_inquirer,
             transactions=self.__optimism_transactions,
         )
         self.__polygon_tx_decoder = PolygonPOSTransactionDecoder(
-            database=self.__database,
+            database=self.database,
             polygon_pos_inquirer=polygon_inquirer,
             transactions=self.__polygon_transactions,
         )
@@ -131,7 +131,7 @@ class RotkiLite:
             optimism_etherscan_key: The API key for Optimism Etherscan service.
             polygon_etherscan_key: The API key for Polygon Etherscan service.
         """
-        self.__database.add_external_service_credentials(
+        self.database.add_external_service_credentials(
             write_cursor=write_cursor,
             credentials=[
                 ExternalServiceApiCredentials(
